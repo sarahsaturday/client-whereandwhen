@@ -10,7 +10,7 @@ export const NavBar = () => {
     const handleLogout = () => {
         // Remove the token from local storage and navigate to the login page
         localStorage.removeItem("lu_token");
-        navigate("/login");
+        navigate("/");
     };
 
     return (

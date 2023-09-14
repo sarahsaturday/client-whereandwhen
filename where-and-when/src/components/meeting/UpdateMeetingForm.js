@@ -1,102 +1,284 @@
-// import React, { useState, useEffect } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-// import { getGameById, updateGame } from "../../managers/GameManager.js";
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getMeetingById, updateMeeting, getDays, getTypes } from '../../managers/MeetingManager';
 
-// export const UpdateGameForm = () => {
-//     const { gameId } = useParams();
-//     const navigate = useNavigate();
+export const EditMeetingForm = () => {
+    const { meetingId } = useParams();
+    console.log('meetingId:', meetingId);
+    const navigate = useNavigate();
+    const [days, setDays] = useState([]); 
+    const [selectedDay, setSelectedDay] = useState(null); 
+    const [types, setTypes] = useState([]);
+    const [selectedType, setSelectedType] = useState(null);
+    const [currentMeeting, setCurrentMeeting] = useState(null)
 
-//     const [currentGame, setCurrentGame] = useState({
-//         title: "",
-//         type: "",
-//         gamer: "",
-//     });
+    useEffect(() => {
+        getMeetingById(meetingId)
+            .then(meeting => {
+                setCurrentMeeting(meeting);
+                setSelectedDay(meeting.day); // Assuming 'day' is the correct property name
+            })
+            .catch(error => {
+                console.error("Error fetching meeting:", error);
+            });
+        getDays()
+            .then(days => {
+                setDays(days);
+            })
+            .catch(error => {
+                console.error("Error fetching days:", error);
+            });
+        getTypes()
+            .then(types => {
+                setTypes(types);
+            })
+            .catch(error => {
+                console.error("Error fetching types:", error);
+            });
+    }, [meetingId]);
 
-//     useEffect(() => {
-//         getGameById(gameId)
-//             .then(game => {
-//                 setCurrentGame(game);
-//             })
-//             .catch(error => {
-//                 console.error("Error fetching game:", error);
-//             });
-//     }, [gameId]);
+    const changeMeetingState = (domMeeting) => {
+        const { name, value } = domMeeting.target;
+        setCurrentMeeting(prevMeeting => ({
+            ...prevMeeting,
+            [name]: value
+        }));
+    }
 
-//     const changeGameState = (domGame) => {
-//         const { name, value } = domGame.target;
-//         setCurrentGame(prevGame => ({
-//             ...prevGame,
-//             [name]: value
-//         }));
-//     }
+    const handleDayChange = (evt) => {
+        const selectedDayId = evt.target.value;
+        setSelectedDay(selectedDayId);
+    }
 
-//     const handleSubmit = (evt) => {
-//         evt.preventDefault();
+    const handleTypeChange = (evt) => {
+        const selectedTypeId = evt.target.value;
+        setSelectedType(selectedTypeId);
+    }
 
-//         const updatedGame = {
-//             title: currentGame.title,
-//             type: currentGame.type,
-//             gamer: parseInt(currentGame.gamer),
-//         };
+    const handleSave = (evt) => {
+        evt.preventDefault();
 
-//         // Send PUT request to update game
-//         updateGame(gameId, updatedGame)
-//             .then(() => {
-//                 navigate(`/games/${gameId}`); // Redirect to game's detail page
-//             })
-//             .catch(error => {
-//                 console.error("Error updating game:", error);
-//             });
-//     }
+        const updatedMeeting = {
+            // Use the currentMeeting state for updated data
+            wso_id: currentMeeting.wso_id,
+            district: currentMeeting.district,
+            area: currentMeeting.area,
+            meeting_name: currentMeeting.meeting_name,
+            day: selectedDay,
+            start_time: currentMeeting.start_time,
+            street_address: currentMeeting.street_address,
+            city: currentMeeting.city,
+            zip: currentMeeting.zip,
+            location_details: currentMeeting.location_details,
+            type: selectedType,
+            zoom_login: currentMeeting.zoom_login,
+            zoom_pass: currentMeeting.zoom_pass,
+            email: currentMeeting.email,
+            phone: currentMeeting.phone,
+        };
 
-//     return (
-//         <form className="gameForm">
-//             <h2 className="gameForm__title">Update Game</h2>
-//             <fieldset>
-//                 <div className="game-group">
-//                     <label htmlFor="title">Title: </label>
-//                     <input
-//                         type="text"
-//                         name="title"
-//                         required
-//                         autoFocus
-//                         className="game-control"
-//                         value={currentGame.title}
-//                         onChange={changeGameState}
-//                     />
-//                 </div>
-//             </fieldset>
-    
-//             <fieldset>
-//                 <div className="game-group">
-//                     <label htmlFor="type">Type: </label>
-//                     <input
-//                         type="text"
-//                         name="type"
-//                         required
-//                         className="game-control"
-//                         value={currentGame.type}
-//                         onChange={changeGameState}
-//                     />
-//                 </div>
-//             </fieldset>
-    
-//             <fieldset>
-//                 <div className="game-group">
-//                     <label htmlFor="gamer">Edited by: </label>
-//                     <input
-//                         type="text"
-//                         name="gamer"
-//                         required
-//                         className="game-control"
-//                         value={currentGame.gamer}
-//                         onChange={changeGameState}
-//                     />
-//                 </div>
-//             </fieldset>
-    
-//             <button type="submit" onClick={handleSubmit} className="btn btn-primary">Update</button>
-//         </form>
-//     );
+        updateMeeting(meetingId, updatedMeeting)
+            .then(() => {
+                navigate(`/meetings/${meetingId}`); // Redirect to meeting's detail page
+            })
+            .catch(error => {
+                console.error("Error updating meeting:", error);
+            });
+    }
 
-// };
+
+    return (
+        <form className="form">
+            <h2>Edit Meeting</h2>
+            {currentMeeting ? (
+                <>
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="day">Day:</label>
+                            <select
+                                id="day"
+                                required
+                                autoFocus
+                                className="meeting-control"
+                                value={selectedDay}
+                                onChange={handleDayChange}
+                            >
+                                <option value="">Select a Day</option>
+                                {days.map(day => (
+                                    <option key={day.id} value={day.id}>{day.day}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="start_time">Start Time:</label>
+                            <input
+                                type="text"
+                                id="start_time"
+                                required
+                                autoFocus
+                                className="meeting-control"
+                                value={currentMeeting.start_time}
+                                onChange={changeMeetingState}
+                            />
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="meeting_name">Meeting Name:</label>
+                            <input
+                                type="text"
+                                id="meeting_name"
+                                required
+                                autoFocus
+                                className="meeting-control"
+                                value={currentMeeting.meeting_name}
+                                onChange={changeMeetingState}
+                            />
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="type">Type:</label>
+                            <select
+                                id="type"
+                                required
+                                autoFocus
+                                className="meeting-control"
+                                value={selectedType}
+                                onChange={handleTypeChange}
+                            >
+                                <option value="">Select a Type</option>
+                                {types.map(type => (
+                                    <option key={type.id} value={type.id}>{type.type_name}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="district">District:</label>
+                            <input
+                                type="number"
+                                id="district"
+                                autoFocus
+                                className="meeting-control"
+                                value={currentMeeting.district}
+                                onChange={changeMeetingState}
+                            />
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="area">Area:</label>
+                            <input
+                                type="number"
+                                id="area"
+                                autoFocus
+                                className="meeting-control"
+                                value={currentMeeting.area}
+                                onChange={changeMeetingState}
+                            />
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="wso_id">WSO ID:</label>
+                            <input
+                                type="number"
+                                id="wso_id"
+                                required
+                                autoFocus
+                                className="meeting-control"
+                                value={currentMeeting.wso_id}
+                                onChange={changeMeetingState}
+                            />
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="address">Street Address:</label>
+                            <input
+                                type="text"
+                                id="address"
+                                required
+                                autoFocus
+                                className="meeting-control"
+                                value={currentMeeting.street_address}
+                                onChange={changeMeetingState}
+                            />
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="location_details">Location Details:</label>
+                            <input
+                                type="text"
+                                id="location_details"
+                                autoFocus
+                                className="meeting-control"
+                                value={currentMeeting.location_details}
+                                onChange={changeMeetingState}
+                            />
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="zoom_login">Zoom Login:</label>
+                            <input
+                                type="text"
+                                id="zoom_login"
+                                autoFocus
+                                className="meeting-control"
+                                value={currentMeeting.zoom_login}
+                                onChange={changeMeetingState}
+                            />
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="zoom_password">Zoom Password:</label>
+                            <input
+                                type="text"
+                                id="zoom_password"
+                                autoFocus
+                                className="meeting-control"
+                                value={currentMeeting.zoom_pass}
+                                onChange={changeMeetingState}
+                            />
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <div className="form-group">
+                            <label htmlFor="email">Email:</label>
+                            <input
+                                type="email"
+                                id="email"
+                                autoFocus
+                                className="meeting-control"
+                                value={currentMeeting.email}
+                                onChange={changeMeetingState}
+                            />
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" onClick={handleSave} className="button">Save</button>
+                </>
+            ) : (
+                <div>Loading...</div>
+            )}
+        </form>
+    );
+};

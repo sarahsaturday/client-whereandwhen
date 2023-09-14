@@ -62,3 +62,31 @@ export const deleteMeeting = (meetingId) => {
     })
     .then(() => getMeetings()); // Fetch the updated meetings list after deletion
 }
+
+export const getDays = () => {
+    return fetch("http://localhost:8000/days", {
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("lu_token")}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to fetch days");
+        }
+        return response.json();
+    });
+}
+
+export const getTypes = () => {
+    return fetch("http://localhost:8000/types", {
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("lu_token")}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to fetch types");
+        }
+        return response.json();
+    });
+}

@@ -71,7 +71,7 @@ export const Register = () => {
                     <input ref={phone} type="tel" name="phone" className="form-control" placeholder="Phone" />
                 </fieldset>
                 <fieldset>
-                    <label>Roles</label>
+                    <label>Roles </label>
                     <div>
                         <label>
                             <input type="checkbox" name="is_staff" ref={isStaff} />
@@ -106,7 +106,7 @@ export const Register = () => {
                 </fieldset>
             </form>
             <section className="link--register">
-                Already registered? <Link to="/login">Login</Link>
+                Already registered? <Link to="/login">Login here!</Link>
             </section>
         </main>
     )
