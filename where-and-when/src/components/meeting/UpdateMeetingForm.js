@@ -6,9 +6,9 @@ export const EditMeetingForm = () => {
     const { meetingId } = useParams();
     console.log('meetingId:', meetingId);
     const navigate = useNavigate();
-    const [days, setDays] = useState([]); 
-    const [selectedDay, setSelectedDay] = useState(null); 
-    const [types, setTypes] = useState([]);
+    const [days, setDays] = useState([]);
+    const [selectedDays, setSelectedDays] = useState([]);
+    const [types, setTypes] = useState('');
     const [selectedType, setSelectedType] = useState(null);
     const [currentMeeting, setCurrentMeeting] = useState(null)
 
@@ -16,11 +16,17 @@ export const EditMeetingForm = () => {
         getMeetingById(meetingId)
             .then(meeting => {
                 setCurrentMeeting(meeting);
-                setSelectedDay(meeting.day); // Assuming 'day' is the correct property name
+                setSelectedDays(meeting.days.map(day => day.id)); // Assuming 'days' is an array of objects with an 'id' property
+                setSelectedType(meeting.type.id); // Assuming 'type' is an object with an 'id' property
+
+                console.log('meeting.days:', meeting.days);
+                console.log('selectedDays:', selectedDays);
+
             })
             .catch(error => {
                 console.error("Error fetching meeting:", error);
             });
+
         getDays()
             .then(days => {
                 setDays(days);
@@ -28,27 +34,52 @@ export const EditMeetingForm = () => {
             .catch(error => {
                 console.error("Error fetching days:", error);
             });
-        getTypes()
-            .then(types => {
-                setTypes(types);
-            })
-            .catch(error => {
-                console.error("Error fetching types:", error);
-            });
     }, [meetingId]);
 
-    const changeMeetingState = (domMeeting) => {
-        const { name, value } = domMeeting.target;
+
+    // useEffect(() => {
+    //     getMeetingById(meetingId)
+    //         .then(meeting => {
+    //             setCurrentMeeting(meeting);
+    //         })
+    //         .catch(error => {
+    //             console.error("Error fetching meeting:", error);
+    //         });
+    //     getDays()
+    //         .then(days => {
+    //             setDays(days);
+    //         })
+    //         .catch(error => {
+    //             console.error("Error fetching days:", error);
+    //         });
+    //     getTypes()
+    //         .then(types => {
+    //             setTypes(types);
+    //         })
+    //         .catch(error => {
+    //             console.error("Error fetching types:", error);
+    //         });
+    // }, [meetingId]);
+
+    const changeMeetingState = (event) => {
+        const { id, value } = event.target;
         setCurrentMeeting(prevMeeting => ({
             ...prevMeeting,
-            [name]: value
+            [id]: value
         }));
     }
 
     const handleDayChange = (evt) => {
         const selectedDayId = evt.target.value;
-        setSelectedDay(selectedDayId);
-    }
+        setSelectedDays((prevSelectedDays) => {
+            if (prevSelectedDays.includes(selectedDayId)) {
+                return prevSelectedDays.filter(dayId => dayId !== selectedDayId);
+            } else {
+                return [...prevSelectedDays, selectedDayId];
+            }
+        });
+    };
+    
 
     const handleTypeChange = (evt) => {
         const selectedTypeId = evt.target.value;
@@ -64,7 +95,7 @@ export const EditMeetingForm = () => {
             district: currentMeeting.district,
             area: currentMeeting.area,
             meeting_name: currentMeeting.meeting_name,
-            day: selectedDay,
+            day: selectedDays,
             start_time: currentMeeting.start_time,
             street_address: currentMeeting.street_address,
             city: currentMeeting.city,
@@ -94,20 +125,18 @@ export const EditMeetingForm = () => {
                 <>
                     <fieldset>
                         <div className="form-group">
-                            <label htmlFor="day">Day:</label>
-                            <select
-                                id="day"
-                                required
-                                autoFocus
-                                className="meeting-control"
-                                value={selectedDay}
-                                onChange={handleDayChange}
-                            >
-                                <option value="">Select a Day</option>
-                                {days.map(day => (
-                                    <option key={day.id} value={day.id}>{day.day}</option>
-                                ))}
-                            </select>
+                            <label>Days:</label>
+                            {days.map(day => (
+                                <label key={day.id}>
+                                    <input
+                                        type="checkbox"
+                                        value={day.id}
+                                        checked={currentMeeting.days.includes(day.id)}
+                                        onChange={handleDayChange}
+                                    />
+                                    {day.day}
+                                </label>
+                            ))}
                         </div>
                     </fieldset>
 
@@ -115,7 +144,7 @@ export const EditMeetingForm = () => {
                         <div className="form-group">
                             <label htmlFor="start_time">Start Time:</label>
                             <input
-                                type="text"
+                                type="time"
                                 id="start_time"
                                 required
                                 autoFocus
@@ -153,9 +182,7 @@ export const EditMeetingForm = () => {
                                 onChange={handleTypeChange}
                             >
                                 <option value="">Select a Type</option>
-                                {types.map(type => (
-                                    <option key={type.id} value={type.id}>{type.type_name}</option>
-                                ))}
+                                <option key={types.id} value={types.id}>{types.type_name}</option>
                             </select>
                         </div>
                     </fieldset>
