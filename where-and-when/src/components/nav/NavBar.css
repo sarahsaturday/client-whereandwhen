@@ -14,6 +14,19 @@
     color: #fff;
 }
 
+.logo-link {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff;
+}
+
+/* Change the color on hover */
+.logo-link:visited {
+    color: #fff;
+    text-decoration: none;
+}   
+
 .navbar__list {
     list-style-type: none;
     display: flex;

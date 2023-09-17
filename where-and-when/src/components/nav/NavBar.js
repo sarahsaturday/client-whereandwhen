@@ -15,7 +15,9 @@ export const NavBar = () => {
 
     return (
         <nav className="navbar">
-            <div className="navbar__logo">LOGO</div>
+            <div className="navbar__logo">
+                <Link to="/" className="logo-link">LOGO</Link>
+            </div>
             <ul className="navbar__list">
                 <li className="navbar__item">
                     {isLoggedIn ? (
