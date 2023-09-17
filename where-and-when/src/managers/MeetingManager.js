@@ -90,3 +90,47 @@ export const getTypes = () => {
         return response.json();
     });
 }
+
+export const getGroupReps = () => {
+    return fetch("http://localhost:8000/groupreps", {
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("lu_token")}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to fetch group reps");
+        }
+        return response.json();
+    });
+}
+
+export const getDistricts = () => {
+    return fetch("http://localhost:8000/districts", {
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("lu_token")}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to fetch districts");
+        }
+        return response.json();
+    }
+    );
+}
+
+export const getAreas = () => {
+    return fetch("http://localhost:8000/areas", {
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("lu_token")}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to fetch areas");
+        }
+        return response.json();
+    }
+    );
+}

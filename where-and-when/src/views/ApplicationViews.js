@@ -5,7 +5,8 @@ import { Authorized } from "./Authorized"
 import { MeetingList } from "../components/meeting/MeetingList"
 import { ManageMeeting } from "../components/meeting/ManageMeeting"
 import { EditMeetingForm } from "../components/meeting/UpdateMeetingForm"
-// import { NewMeetingForm } from "../components/meeting/NewMeetingForm"
+import { MeetingDetail } from "../components/meeting/MeetingDetail"
+import { NewMeetingForm } from "../components/meeting/NewMeetingForm"
 
 export const ApplicationViews = () => {
     return (
@@ -17,7 +18,8 @@ export const ApplicationViews = () => {
 
             {/* Protected Routes */}
             <Route element={<Authorized />}>
-                <Route path="/manage" element={<ManageMeeting />} />
+                <Route path="/meetings/:meetingId" element={<MeetingDetail />} />
+                <Route path="/manage/add" element={<NewMeetingForm />} />
                 <Route path="/manage/edit/:meetingId" element={<EditMeetingForm />} />
                 {/* <Route path="/add" element={<NewMeetingForm />} /> */}
             </Route>
