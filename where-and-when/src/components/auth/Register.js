@@ -1,7 +1,7 @@
 import React, { useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { registerUser } from "../../managers/AuthManager"
-import "./Auth.css"
+import "../../Generic.css"
 
 export const Register = () => {
     const firstName = useRef()
@@ -45,69 +45,150 @@ export const Register = () => {
     }
 
     return (
-        <main style={{ textAlign: "center" }}>
-
-            <dialog className="dialog dialog--password" ref={passwordDialog}>
-                <div>Passwords do not match</div>
-                <button className="button--close" onClick={e => passwordDialog.current.close()}>Close</button>
-            </dialog>
-
-            <form className="form--login" onSubmit={handleRegister}>
-                <h1 className="h3 mb-3 font-weight-normal">Register</h1>
-                <fieldset>
-                    <label htmlFor="firstName"> First Name </label>
-                    <input ref={firstName} type="text" name="firstName" className="form-control" placeholder="First name" required autoFocus />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="lastName"> Last Initial </label>
-                    <input ref={lastName} type="text" name="lastName" className="form-control" placeholder="Last name" required />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="inputEmail"> Email </label>
-                    <input ref={email} type="email" name="email" className="form-control" placeholder="Email" required />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="inputPhone"> Phone </label>
-                    <input ref={phone} type="tel" name="phone" className="form-control" placeholder="Phone" />
-                </fieldset>
-                <fieldset>
-                    <label>Roles </label>
-                    <div>
-                        <label>
-                            <input type="checkbox" name="is_staff" ref={isStaff} />
-                            Staff
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <input type="checkbox" name="is_group_rep" ref={isGroupRep} />
-                            Group Rep
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <input type="checkbox" name="is_isr" ref={isIsr} />
-                            ISR
-                        </label>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="inputPassword"> Password </label>
-                    <input ref={password} type="password" name="password" className="form-control" placeholder="Password" required />
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="verifyPassword"> Verify Password </label>
-                    <input ref={verifyPassword} type="password" name="verifyPassword" className="form-control" placeholder="Verify password" required />
-                </fieldset>
-                <fieldset style={{
-                    textAlign: "center"
-                }}>
-                    <button className="btn btn-1 btn-sep icon-send" type="submit">Submit</button>
-                </fieldset>
-            </form>
-            <section className="link--register">
-                Already registered? <Link to="/login">Login here!</Link>
-            </section>
-        </main>
-    )
+        <div>
+            <main>
+                <dialog className="form-dialog" ref={passwordDialog}>
+                    <div>Passwords do not match</div>
+                    <button
+                        className="navbar-button"
+                        onClick={(e) => passwordDialog.current.close()}
+                    >
+                        Close
+                    </button>
+                </dialog>
+                <section>
+                    <form className="form-container" onSubmit={handleRegister}>
+                        <h1 className="form-title">Register</h1>
+                        <fieldset className="form-input">
+                            <label htmlFor="firstName" className="form-label">
+                                First Name
+                            </label>
+                            <input
+                                ref={firstName}
+                                type="text"
+                                name="firstName"
+                                className="form-input"
+                                placeholder="First name"
+                                required
+                                autoFocus
+                            />
+                        </fieldset>
+                        <fieldset className="form-input">
+                            <label htmlFor="lastName" className="form-label">
+                                Last Initial
+                            </label>
+                            <input
+                                ref={lastName}
+                                type="text"
+                                name="lastName"
+                                className="form-input"
+                                placeholder="Last name"
+                                required
+                            />
+                        </fieldset>
+                        <fieldset className="form-input">
+                            <label htmlFor="inputEmail" className="form-label">
+                                Email
+                            </label>
+                            <input
+                                ref={email}
+                                type="email"
+                                name="email"
+                                className="form-input"
+                                placeholder="Email"
+                                required
+                            />
+                        </fieldset>
+                        <fieldset className="form-input">
+                            <label htmlFor="inputPhone" className="form-label">
+                                Phone
+                            </label>
+                            <input
+                                ref={phone}
+                                type="tel"
+                                name="phone"
+                                className="form-input"
+                                placeholder="Phone"
+                            />
+                        </fieldset>
+                        <fieldset className="form-input">
+                            <label className="block text-gray-700">Roles</label>
+                            <div className="mb-2">
+                                <label className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        name="is_staff"
+                                        ref={isStaff}
+                                        className="form-checkbox"
+                                    />
+                                    <span className="ml-2">Staff</span>
+                                </label>
+                            </div>
+                            <div className="mb-2">
+                                <label className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        name="is_group_rep"
+                                        ref={isGroupRep}
+                                        className="form-checkbox"
+                                    />
+                                    <span className="ml-2">Group Rep</span>
+                                </label>
+                            </div>
+                            <div>
+                                <label className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        name="is_isr"
+                                        ref={isIsr}
+                                        className="form-checkbox"
+                                    />
+                                    <span className="ml-2">ISR</span>
+                                </label>
+                            </div>
+                        </fieldset>
+                        <fieldset className="form-input">
+                            <label htmlFor="inputPassword" className="form-label">
+                                Password
+                            </label>
+                            <input
+                                ref={password}
+                                type="password"
+                                name="password"
+                                className="form-input"
+                                placeholder="Password"
+                                required
+                            />
+                        </fieldset>
+                        <fieldset className="form-input">
+                            <label htmlFor="verifyPassword" className="form-label">
+                                Verify Password
+                            </label>
+                            <input
+                                ref={verifyPassword}
+                                type="password"
+                                name="verifyPassword"
+                                className="form-input"
+                                placeholder="Verify password"
+                                required
+                            />
+                        </fieldset>
+                        <fieldset className="form-input">
+                            <button
+                                className="form-button bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md w-full"
+                                type="submit"
+                            >
+                                Submit
+                            </button>
+                        </fieldset>
+                    </form>
+                </section>
+                <section className="form-link-container">
+                    <Link to="/login" className="form-link">
+                        Already registered? Login here!
+                    </Link>
+                </section>
+            </main>
+        </div>
+    );
 }

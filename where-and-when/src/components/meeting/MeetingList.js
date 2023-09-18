@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getMeetings, deleteMeeting } from "../../managers/MeetingManager";
+import "../../Generic.css";
 
 export const MeetingList = () => {
     const [meetings, setMeetings] = useState([]);
@@ -28,15 +29,14 @@ export const MeetingList = () => {
         if (window.confirm("Are you sure you want to delete this meeting?")) {
             // If the user confirms, call the deleteMeeting function
             deleteMeeting(meetingId)
-                .then(() => {
-                    // Meeting deleted successfully
-                    // You may want to update the state or reload the meetings list here
-                })
-                .catch((error) => {
-                    console.error("Error deleting meeting:", error);
-                });
-        }
-    };
+            .then(() => {
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error("Error deleting meeting:", error);
+            });
+    }
+};
 
     const handleEdit = (meetingId) => {
         // Navigate to the edit page for the specific meeting
@@ -44,14 +44,13 @@ export const MeetingList = () => {
     };
 
     const filteredMeetings = meetings.filter((meeting) =>
-        meeting.meeting_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        meeting.day.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        meeting.start_time.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        meeting.district.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        meeting.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        meeting.zip.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        meeting.location_details.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    (meeting.meeting_name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+    (meeting.day?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+    (meeting.start_time?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+    (meeting.city?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+    (typeof meeting.zip === 'number' && String(meeting.zip).includes(searchQuery)) || 
+    (meeting.location_details?.toLowerCase() || '').includes(searchQuery.toLowerCase())
+);
 
     const renderValueOrNa = (value) => (value ? value : "N/A");
 
@@ -65,42 +64,48 @@ export const MeetingList = () => {
     const userLoggedIn = isUserLoggedIn();
 
     return (
-        <article className="meetings">
-            <h2 className="eventForm__title">Meetings in Middle TN</h2>
-            <div className="search-bar">
+        <article>
+            <h2 className="form-title">Meetings in Middle TN</h2>
+            <div className="search-bar-container">
                 <input
                     type="text"
                     placeholder="Search meetings"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    className="form-input"
                 />
             </div>
-            {filteredMeetings.map((meeting) => (
-                <section key={`meeting--${meeting.id}`} className="meeting">
-                    <div className="meeting__days">Day: {meeting.days}</div>
-                    <div className="meeting__start-time">Start Time: {meeting.start_time}</div>
-                    <div className="meeting__name">Meeting Name: {meeting.meeting_name}</div>
-                    <div className="meeting__type">Type: {meeting.type}</div>
-                    <div className="meeting__district">District: {meeting.district}</div>
-                    <div className="meeting__area">Area: {meeting.area}</div>
-                    <div className="meeting__wso-id">WSO ID: {renderValueOrMissing(meeting.wso_id)}</div>
-                    <div className="meeting__address">Address: {renderValueOrNa(meeting.street_address)}</div>
-                    <div className="meeting__city">City: {meeting.city}</div>
-                    <div className="meeting__zip">Zip: {meeting.zip}</div>
-                    <div className="meeting__location-details">Location Details: {meeting.location_details}</div>
-                    <div className="meeting__zoom-login">Zoom Login: {renderValueOrNa(meeting.zoom_login)}</div>
-                    <div className="meeting__zoom-pass">Zoom Password: {renderValueOrNa(meeting.zoom_pass)}</div>
-                    <div className="meeting__email">Email: {meeting.email}</div>
-                    <div className="meeting__actions">
-                        {userLoggedIn ? (
-                            <>
-                                <button onClick={() => handleEdit(meeting.id)}>Edit</button>
-                                <button onClick={() => handleDelete(meeting.id)}>Delete</button>
-                            </>
-                        ) : null}
+            <div className="meetings-grid">
+                {filteredMeetings.map((meeting, index) => (
+                    <section key={`meeting--${meeting.id}`} className="meetings-container">
+                        <div>
+                            <p className="form-label">Day: {meeting.days}</p>
+                            <p className="form-label">Start Time: {meeting.start_time}</p>
+                            <p className="form-label">Meeting Name: {meeting.meeting_name}</p>
+                            <p className="form-label">Type: {meeting.type}</p>
+                            <p className="form-label">District: {meeting.district}</p>
+                            <p className="form-label">Area: {meeting.area}</p>
+                            <p className="form-label">WSO ID: {renderValueOrMissing(meeting.wso_id)}</p>
+                            <p className="form-label">Address: {renderValueOrNa(meeting.street_address)}</p>
+                            <p className="form-label">City: {meeting.city}</p>
+                            <p className="form-label">Zip: {meeting.zip}</p>
+                            <p className="form-label">Location Details: {meeting.location_details}</p>
+                            <p className="form-label">Zoom Login: {renderValueOrNa(meeting.zoom_login)}</p>
+                            <p className="form-label">Zoom Password: {renderValueOrNa(meeting.zoom_pass)}</p>
+                            <p className="form-label">Email: {meeting.email}</p>
+                            <p className="form-label">Phone: {meeting.phone}</p>
                         </div>
-                </section>
-            ))}
+                        <div>
+                            {userLoggedIn ? (
+                                <>
+                                    <button onClick={() => handleEdit(meeting.id)} className="button">Edit</button>
+                                    <button onClick={() => handleDelete(meeting.id)} className="button">Delete</button>
+                                </>
+                            ) : null}
+                        </div>
+                    </section>
+                ))}
+            </div>
         </article>
     );
 };

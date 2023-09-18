@@ -61,13 +61,11 @@ export const NewMeetingForm = () => {
                 const daysData = await getDays();
                 const typesData = await getTypes();
                 const districtsData = await getDistricts();
-                const areasData = await getAreas();
                 const groupRepsData = await getGroupReps();
 
                 setDays(daysData);
                 setTypes(typesData);
                 setDistricts(districtsData);
-                setAreas(areasData);
                 setGroupReps(groupRepsData);
             } catch (error) {
                 console.error('Error:', error);
@@ -86,33 +84,24 @@ export const NewMeetingForm = () => {
         }));
     };
 
-    const handleCheckboxChange = (event) => {
+    // const handleDayChange = (event) => {
+    //     console.log('Checkbox clicked:', event.target.checked, event.target.value, event.target.name);
+
+    //     /// when a day box is checked, add to the array of days
+    //     /// when a day box is unchecked, remove from the array of days
+
+
+    const handleHomeGroupChange = (event) => {
         console.log('Checkbox clicked:', event.target.checked, event.target.value, event.target.name);
-
-        const { name, value } = event.target;
+    
         const isChecked = event.target.checked;
-
-        if (name === "is_home_group") {
-            setNewMeeting((prevMeeting) => ({
-                ...prevMeeting,
-                groupReps: isChecked
-                    ? [{ id: loggedInUserId, is_home_group: true }]
-                    : [],
-
-            }));
-        } else {
-            if (isChecked) {
-                setNewMeeting((prevMeeting) => ({
-                    ...prevMeeting,
-                    days: [...prevMeeting.days, parseInt(value)],
-                }));
-            } else {
-                setNewMeeting((prevMeeting) => ({
-                    ...prevMeeting,
-                    days: prevMeeting.days.filter((dayId) => dayId !== parseInt(value)),
-                }));
-            }
-        }
+    
+        setNewMeeting((prevMeeting) => ({
+            ...prevMeeting,
+            groupReps: isChecked
+                ? [{ id: loggedInUserId, is_home_group: true }]
+                : [],
+        }));
     };
 
     const handleRadioChange = (event) => {
@@ -154,248 +143,188 @@ export const NewMeetingForm = () => {
     };
 
     return (
-        <form className="meetingForm" onSubmit={handleSubmit}>
-            <h2 className="meetingForm__title">Create New Meeting</h2>
+        <form onSubmit={handleSubmit} className="form-container">
+            <h2 className="form-title">Create New Meeting</h2>
 
-            <fieldset>
-                <div className="form-group">
-                    <label>Days:</label>
-                    {Array.isArray(newMeeting.days) && (
-                        <div>
-                            {days.map((day) => (
-                                <div key={day.id} className="checkbox">
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            name="days"
-                                            value={day.id}
-                                            checked={newMeeting.days.includes(day.id)}
-                                            onChange={handleCheckboxChange}
-                                        />
-                                        {day.day}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="startTime">Start Time:</label>
-                    <input
-                        type="time"
-                        name="startTime"
-                        required
-                        autoFocus
-                        className="meeting-control"
-                        value={newMeeting.startTime}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="meetingName">Meeting Name:</label>
-                    <input
-                        type="text"
-                        name="meetingName"
-                        required
-                        autoFocus
-                        className="meeting-control"
-                        value={newMeeting.meetingName}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label> Type:</label>
-                    {types.map((type) => (
-                        <div key={type.id} className="meeting-control">
-                            <input
-                                type="radio"
-                                name="type"
-                                value={type.id}
-                                checked={newMeeting.type === type.id}
-                                onChange={handleRadioChange}
-                            />
-                            {type.type_name}
-                        </div>
-                    ))}
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label> District:</label>
-                    {districts.map((district) => (
-                        <div key={district.id} className="meeting-control">
-                            <input
-                                type="radio"
-                                name="district"
-                                value={district.id}
-                                checked={newMeeting.district === district.id}
-                                onChange={handleRadioChange}
-                            />
-                            {district.district_number}
-                        </div>
-                    ))}
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="wsoId">WSO ID:</label>
-                    <input
-                        type="number"
-                        name="wsoId"
-                        required
-                        autoFocus
-                        className="meeting-control"
-                        value={newMeeting.wsoId}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="address">Street Address:</label>
-                    <input
-                        type="text"
-                        name="address"
-                        required
-                        autoFocus
-                        className="meeting-control"
-                        value={newMeeting.address}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="city">City:</label>
-                    <input
-                        type="text"
-                        name="city"
-                        required
-                        autoFocus
-                        className="meeting-control"
-                        value={newMeeting.city}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="zip">Zip:</label>
-                    <input
-                        type="number"
-                        name="zip"
-                        required
-                        autoFocus
-                        className="meeting-control"
-                        value={newMeeting.zip}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="locationDetails">Location Details:</label>
-                    <input
-                        type="text"
-                        name="locationDetails"
-                        autoFocus
-                        className="meeting-control"
-                        value={newMeeting.locationDetails}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="zoomLogin">Zoom Login:</label>
-                    <input
-                        type="number"
-                        name="zoomLogin"
-                        autoFocus
-                        className="meeting-control"
-                        value={newMeeting.zoomLogin}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="zoomPassword">Zoom Password:</label>
-                    <input
-                        type="number"
-                        name="zoomPassword"
-                        autoFocus
-                        className="meeting-control"
-                        value={newMeeting.zoomPassword}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="text"
-                        name="email"
-                        autoFocus
-                        className="meeting-control"
-                        value={newMeeting.email}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="phone">Phone:</label>
-                    <input
-                        type="text"
-                        name="phone"
-                        autoFocus
-                        className="meeting-control"
-                        value={newMeeting.phone}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <div className="form-group">
-                    <div className="checkbox">
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="is_home_group"
-                                checked={newMeeting.groupReps.some((groupRep) => groupRep.id === loggedInUserId && groupRep.is_home_group)}
-                                onChange={handleCheckboxChange}
-                            />
-                            This is my home group
-                        </label>
+            <div className="form-input">
+                Meeting Day(s): {Array.isArray(newMeeting.days) && (
+                    <div>
+                        {days.map((day) => (
+                            <div key={day.id}>
+                                <input
+                                    type="checkbox"
+                                    name="days"
+                                    value={day.id}
+                                    checked={newMeeting.days.includes(day.id)}
+                                    onChange={handleDayChange}
+                                />
+                                {day.day}
+                            </div>
+                        ))}
                     </div>
-                </div>
-            </fieldset>
+                )}
+            </div>
 
-            <button type="submit" className="btn btn-primary">
+            <div className="form-input">
+                Start time: <input
+                    type="time"
+                    name="startTime"
+                    required
+                    autoFocus
+                    value={newMeeting.startTime}
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className="form-input">
+                Meeting Name: <input
+                    type="text"
+                    name="meetingName"
+                    required
+                    autoFocus
+                    value={newMeeting.meetingName}
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className="form-input">
+                Meeting Type: {types.map((type) => (
+                    <div key={type.id}>
+                        <input
+                            type="radio"
+                            name="type"
+                            value={type.id}
+                            checked={newMeeting.type === type.id}
+                            onChange={handleRadioChange}
+                        />
+                        {type.type_name}
+                    </div>
+                ))}
+            </div>
+
+            <div className="form-input">
+                District: {districts.map((district) => (
+                    <div key={district.id}>
+                        <input
+                            type="radio"
+                            name="district"
+                            value={district.id}
+                            checked={newMeeting.district === district.id}
+                            onChange={handleRadioChange}
+                        />
+                        {district.district_number}
+                    </div>
+                ))}
+            </div>
+
+            <div className="form-input">
+                WSO ID: <input
+                    type="number"
+                    name="wsoId"
+                    required
+                    autoFocus
+                    value={newMeeting.wsoId}
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className="form-input">
+                Street Address (if applicable): <input
+                    type="text"
+                    name="address"
+                    autoFocus
+                    value={newMeeting.address}
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className="form-input">
+                City: <input
+                    type="text"
+                    name="city"
+                    required
+                    autoFocus
+                    value={newMeeting.city}
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className="form-input">
+                Zipcode: <input
+                    type="number"
+                    name="zip"
+                    required
+                    autoFocus
+                    value={newMeeting.zip}
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className="form-input">
+                Location Details (if applicable): <input
+                    type="text"
+                    name="locationDetails"
+                    autoFocus
+                    value={newMeeting.locationDetails}
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className="form-input">
+                Zoom Login ID (if applicable): <input
+                    type="number"
+                    name="zoomLogin"
+                    autoFocus
+                    value={newMeeting.zoomLogin}
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className="form-input">
+                Zoom Password (if applicable): <input
+                    type="number"
+                    name="zoomPassword"
+                    autoFocus
+                    value={newMeeting.zoomPassword}
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className="form-input">
+                Meeting Email: <input
+                    type="text"
+                    name="email"
+                    autoFocus
+                    value={newMeeting.email}
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className="form-input">
+                Meeting Phone Number: <input
+                    type="text"
+                    name="phone"
+                    autoFocus
+                    value={newMeeting.phone}
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div className="form-input">
+                <div>
+                    <input
+                        type="checkbox"
+                        name="is_home_group"
+                        checked={newMeeting.groupReps.some((groupRep) => groupRep.id === loggedInUserId && groupRep.is_home_group)}
+                        onChange={handleHomeGroupChange}
+                    />
+                    This is my home group
+                </div>
+            </div>
+
+            <button type="submit" className="form-button">
                 Add Meeting
             </button>
         </form>
     );
-};
+};      

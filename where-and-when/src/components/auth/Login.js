@@ -1,7 +1,7 @@
 import React, { useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { loginUser } from "../../managers/AuthManager"
-import "./Auth.css"
+import "../../Generic.css"
 
 export const Login = () => {
     const email = useRef()
@@ -29,33 +29,62 @@ export const Login = () => {
     }
 
     return (
-        <main className="container--login">
-            <dialog className="dialog dialog--auth" ref={invalidDialog}>
-                <div>Username or password was not valid.</div>
-                <button className="button--close" onClick={e => invalidDialog.current.close()}>Close</button>
-            </dialog>
-            <section>
-                <form className="form--login" onSubmit={handleLogin}>
-                    <h1>Where & When</h1>
-                    <h2>Please sign in:</h2>
-                    <fieldset>
-                        <label htmlFor="inputEmail"> Email Address </label>
-                        <input ref={email} type="email" id="email" className="form-control" placeholder="Email Address" required autoFocus />
-                    </fieldset>
-                    <fieldset>
-                        <label htmlFor="inputPassword"> Password </label>
-                        <input ref={password} type="password" id="password" className="form-control" placeholder="Password" required />
-                    </fieldset>
-                    <fieldset style={{
-                        textAlign: "center"
-                    }}>
-                        <button className="btn btn-1 btn-sep icon-send" type="submit">Sign In</button>
-                    </fieldset>
-                </form>
-            </section>
-            <section className="link--register">
-                <Link to="/register">Not a member yet? Register here!</Link>
-            </section>
-        </main>
-    )
+        <div>
+            <main>
+                <dialog className="form-dialog" ref={invalidDialog}>
+                    <div>Username or password was not valid.</div>
+                    <button
+                        className="navbar-button"
+                        onClick={(e) => invalidDialog.current.close()}
+                    >
+                        Close
+                    </button>
+                </dialog>
+                <section>
+                    <form className="form-container" onSubmit={handleLogin}>
+                        <h1 className="form-title">Where & When</h1>
+                        <h2 className="form-subtitle">Please sign in:</h2>
+                        <fieldset className="form-input">
+                            <label htmlFor="inputEmail" className="form-label">
+                                Email Address
+                            </label>
+                            <input
+                                ref={email}
+                                type="email"
+                                id="email"
+                                className="form-input"
+                                placeholder="Email Address"
+                                required
+                                autoFocus
+                            />
+                        </fieldset>
+                        <fieldset className="form-input">
+                            <label htmlFor="inputPassword" className="form-label">
+                                Password
+                            </label>
+                            <input
+                                ref={password}
+                                type="password"
+                                id="password"
+                                className="form-input"
+                                placeholder="Password"
+                                required
+                            />
+                        </fieldset>
+                        <fieldset className="form-input">
+                            <button className="form-button" type="submit">
+                                Sign In
+                            </button>
+                        </fieldset>
+                    </form>
+                </section>
+                <section className="form-link-container">
+                    <Link to="/register" className="form-link">
+                        Not a member yet? Register here!
+                    </Link>
+                </section>
+
+            </main>
+        </div>
+    );
 }

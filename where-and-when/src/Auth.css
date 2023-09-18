@@ -1,0 +1,29 @@
+/* Common styles for Login and Register components */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.auth-form {
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+}
+
+.auth-dialog {
+    text-align: center;
+    color: red;
+    margin-bottom: 16px;
+}
+
+.auth-link {
+    text-align: center;
+    margin-top: 16px;
+    color: #007bff;
+}
