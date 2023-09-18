@@ -1,11 +1,28 @@
+// This function fetches a list of meetings from the server.
 export const getMeetings = () => {
+    // Check if there is a token in local storage.
+    const token = localStorage.getItem("lu_token");
+
+    // Define headers with a default value (no Authorization header).
+    const headers = {};
+
+    // If there is a token in local storage, add an Authorization header with the token value.
+    // This header is used for authentication.
+    if (token) {
+        headers["Authorization"] = `Token ${token}`;
+    }
+
+    // Send a GET request to the server's endpoint for meetings.
     return fetch("http://localhost:8000/meetings", {
-        headers:{
-            "Authorization": `Token ${localStorage.getItem("lu_token")}`
-        }
+        headers: headers
     })
+    // Parse the response as JSON and return it.
     .then(response => response.json());
+
+    // If there is no token in local storage, the user is not logged in,
+    // so we don't add the Authorization header to the request.
 }
+
 
 export const createMeeting = (meeting) => {
     return fetch("http://localhost:8000/meetings", {
