@@ -122,6 +122,20 @@ export const getGroupReps = () => {
     });
 }
 
+export const getGroupRepById = (groupRepId) => {
+    return fetch(`http://localhost:8000/groupreps/${groupRepId}`, { 
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("lu_token")}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to fetch group rep details");
+        }
+        return response.json();
+    });
+}
+
 export const getDistricts = () => {
     return fetch("http://localhost:8000/districts", {
         headers: {

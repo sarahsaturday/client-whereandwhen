@@ -11,7 +11,6 @@ import {
 
 export const EditMeetingForm = () => {
     const { meetingId } = useParams();
-    const [user, setUser] = useState({});
     console.log('meetingId:', meetingId);
     const navigate = useNavigate();
     const [days, setDays] = useState([]);
@@ -90,24 +89,22 @@ export const EditMeetingForm = () => {
             [id]: value
         }));
     }
-
+    
     const handleDayChange = (event) => {
-        const { value } = event.target;
-
-        //////////// CONSOLE LOGS
-        console.log('Current value:', value);
-        console.log('Before update - selectedDays:', selectedDays);
-
-        setSelectedDays((prevSelectedDays) => {
-            if (prevSelectedDays.includes(value)) {
-                return prevSelectedDays.filter((day) => day !== value);
-            } else {
-                return [...prevSelectedDays, parseInt(value)];
-            }
-        });
-
-        //////////// CONSOLE LOGS
-        console.log('After update - selectedDays:', selectedDays);
+        const { value, checked } = event.target;
+    
+        if (checked) {
+            // Handle addition logic here
+            setSelectedDays((prevSelectedDays) => [
+                ...prevSelectedDays,
+                parseInt(value),
+            ]);
+        } else {
+            // Handle removal logic here
+            setSelectedDays((prevSelectedDays) =>
+                prevSelectedDays.filter((day) => day !== parseInt(value))
+            );
+        }
     };
 
     const handleTypeChange = (selectedType) => {
