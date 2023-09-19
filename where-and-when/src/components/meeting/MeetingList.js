@@ -65,7 +65,7 @@ export const MeetingList = () => {
 
     return (
         <article>
-            <h2 className="form-title">Meetings in Middle TN</h2>
+            <h2 className="form-title">Where & When: Meetings in Middle TN</h2>
             <div className="search-bar-container">
                 <input
                     type="text"

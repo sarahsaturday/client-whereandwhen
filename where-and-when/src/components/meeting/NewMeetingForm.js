@@ -3,19 +3,15 @@ import { useNavigate } from "react-router-dom";
 
 import {
     createMeeting,
-    getMeetings,
     getDays,
     getTypes,
     getDistricts,
-    getAreas,
     getGroupReps,
 } from '../../managers/MeetingManager.js';
 
 export const NewMeetingForm = () => {
     const navigate = useNavigate();
-    const [groupRepId, setGroupRepId] = useState(null);
-    const [updatedDays, setUpdatedDays] = useState([]);
-    const [updatedGroupReps, setUpdatedGroupReps] = useState([]);
+    const [selectedDays, setSelectedDays] = useState([]);
 
     const [newMeeting, setNewMeeting] = useState({
         days: [],
@@ -33,47 +29,86 @@ export const NewMeetingForm = () => {
         zoomPassword: 0,
         email: "",
         phone: "",
-        groupReps: [{ id: groupRepId, is_home_group: false }],
+        groupReps: [],
     });
 
     const [days, setDays] = useState([]);
     const [types, setTypes] = useState([]);
     const [districts, setDistricts] = useState([]);
-    const [areas, setAreas] = useState([]);
-    const [groupReps, setGroupReps] = useState([]);
     const [loggedInUserId, setLoggedInUserId] = useState(null);
+    const [groupReps, setGroupReps] = useState([]);
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const loggedInUserId = localStorage.getItem("lu_token");
-
-                setNewMeeting((prevMeeting) => ({
-                    ...prevMeeting,
-                    groupReps: [
-                        {
-                            id: loggedInUserId,
-                            is_home_group: false,
-                        },
-                    ],
-                }));
-
-                const daysData = await getDays();
-                const typesData = await getTypes();
-                const districtsData = await getDistricts();
-                const groupRepsData = await getGroupReps();
-
-                setDays(daysData);
-                setTypes(typesData);
-                setDistricts(districtsData);
-                setGroupReps(groupRepsData);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        fetchData();
+        getDays()
+            .then((data) => {
+                console.log("Received days data:", data);
+                if (Array.isArray(data)) {
+                    setDays(data);
+                } else {
+                    console.error("Error: Days data is not an array");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching days:", error);
+            });
     }, []);
+
+    useEffect(() => {
+        getTypes()
+            .then((data) => {
+                console.log("Received types data:", data);
+                if (Array.isArray(data)) {
+                    setTypes(data);
+                } else {
+                    console.error("Error: Types data is not an array");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching types:", error);
+            });
+    }, []);
+
+    useEffect(() => {
+        getDistricts()
+            .then((data) => {
+                console.log("Received districts data:", data);
+                if (Array.isArray(data)) {
+                    setDistricts(data);
+                } else {
+                    console.error("Error: Districts data is not an array");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching districts:", error);
+            });
+    }, []);
+
+    useEffect(() => {
+        getGroupReps()
+            .then((data) => {
+                console.log("Received group reps data:", data);
+                if (Array.isArray(data)) {
+                    setGroupReps(data);
+                } else {
+                    console.error("Error: Group reps data is not an array");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching group reps:", error);
+            });
+    }, []);
+
+    useEffect(() => {
+        const loggedInUserId = parseInt(localStorage.getItem("lu_token"));
+        setLoggedInUserId(loggedInUserId);
+    }, []);
+
+    const groupRepId = groupReps.find((groupRep) => groupRep.user_id === loggedInUserId)?.id;
+
+    const updatedGroupReps = newMeeting.groupReps.map((groupRep) => ({
+        ...groupRep,
+        is_home_group: groupRep.is_home_group,
+    }));
 
     const handleInputChange = (event) => {
         console.log('data entered:', event.target.name, event.target.value);
@@ -84,24 +119,44 @@ export const NewMeetingForm = () => {
         }));
     };
 
-    // const handleDayChange = (event) => {
-    //     console.log('Checkbox clicked:', event.target.checked, event.target.value, event.target.name);
-
-    //     /// when a day box is checked, add to the array of days
-    //     /// when a day box is unchecked, remove from the array of days
-
+    const handleDayChange = (event) => {
+        const { value, checked } = event.target;
+    
+        if (checked) {
+            // Handle addition logic here
+            setSelectedDays((prevSelectedDays) => [
+                ...prevSelectedDays,
+                parseInt(value),
+            ]);
+        } else {
+            // Handle removal logic here
+            setSelectedDays((prevSelectedDays) =>
+                prevSelectedDays.filter((day) => day !== parseInt(value))
+            );
+        }
+    };
 
     const handleHomeGroupChange = (event) => {
-        console.log('Checkbox clicked:', event.target.checked, event.target.value, event.target.name);
-    
-        const isChecked = event.target.checked;
-    
-        setNewMeeting((prevMeeting) => ({
-            ...prevMeeting,
-            groupReps: isChecked
-                ? [{ id: loggedInUserId, is_home_group: true }]
-                : [],
-        }));
+        const { checked } = event.target;
+
+        if (checked) {
+            // Checkbox is checked, add the group rep to the groupReps array
+            setNewMeeting((prevMeeting) => ({
+                ...prevMeeting,
+                groupReps: [
+                    {
+                        id: groupRepId, // Use the groupRepId obtained from the API
+                        is_home_group: true,
+                    },
+                ],
+            }));
+        } else {
+            // Checkbox is unchecked, remove the group rep from the groupReps array
+            setNewMeeting((prevMeeting) => ({
+                ...prevMeeting,
+                groupReps: [],
+            }));
+        }
     };
 
     const handleRadioChange = (event) => {
@@ -133,7 +188,7 @@ export const NewMeetingForm = () => {
             zoom_pass: newMeeting.zoomPassword,
             email: newMeeting.email,
             phone: newMeeting.phone,
-            days: updatedDays,
+            days: selectedDays,
             group_reps: updatedGroupReps,
         };
 
@@ -153,9 +208,8 @@ export const NewMeetingForm = () => {
                             <div key={day.id}>
                                 <input
                                     type="checkbox"
-                                    name="days"
                                     value={day.id}
-                                    checked={newMeeting.days.includes(day.id)}
+                                    checked={selectedDays.includes(day.id)}
                                     onChange={handleDayChange}
                                 />
                                 {day.day}
@@ -315,7 +369,7 @@ export const NewMeetingForm = () => {
                     <input
                         type="checkbox"
                         name="is_home_group"
-                        checked={newMeeting.groupReps.some((groupRep) => groupRep.id === loggedInUserId && groupRep.is_home_group)}
+                        checked={newMeeting.is_home_group}
                         onChange={handleHomeGroupChange}
                     />
                     This is my home group
