@@ -112,7 +112,7 @@ export const Register = () => {
                             />
                         </fieldset>
                         <fieldset className="form-input">
-                            <label className="block text-gray-700">Roles</label>
+                            <label htmlFor="roles" >Roles</label>
                             <div className="mb-2">
                                 <label className="flex items-center">
                                     <input
@@ -175,7 +175,7 @@ export const Register = () => {
                         </fieldset>
                         <fieldset className="form-input">
                             <button
-                                className="form-button bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md w-full"
+                                className="form-button"
                                 type="submit"
                             >
                                 Submit

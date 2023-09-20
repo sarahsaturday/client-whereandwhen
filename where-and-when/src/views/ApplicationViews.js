@@ -20,7 +20,6 @@ export const ApplicationViews = () => {
                 <Route path="/meetings/:meetingId" element={<MeetingDetail />} />
                 <Route path="/manage/add" element={<NewMeetingForm />} />
                 <Route path="/manage/edit/:meetingId" element={<EditMeetingForm />} />
-                {/* <Route path="/add" element={<NewMeetingForm />} /> */}
             </Route>
         </Routes>
     );
