@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
     getMeetingById,
     updateMeeting,
@@ -8,6 +8,7 @@ import {
     getAreas,
     getDistricts,
 } from '../../managers/MeetingManager';
+import '../../Generic.css';
 
 export const EditMeetingForm = () => {
     const { meetingId } = useParams();
@@ -16,9 +17,9 @@ export const EditMeetingForm = () => {
     const [days, setDays] = useState([]);
     const [selectedDays, setSelectedDays] = useState([]);
     const [types, setTypes] = useState([]);
-    const [selectedType, setSelectedType] = useState(null);
+    const [selectedType, setSelectedType] = useState([]);
     const [currentMeeting, setCurrentMeeting] = useState(null);
-    const [currentType, setCurrentType] = useState(null);
+    const [currentType, setCurrentType] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [currentDistrict, setCurrentDistrict] = useState([]);
 
@@ -89,7 +90,7 @@ export const EditMeetingForm = () => {
             [id]: value
         }));
     }
-    
+
     const handleDayChange = (event) => {
         const { value, checked } = event.target;
     
@@ -108,7 +109,7 @@ export const EditMeetingForm = () => {
     };
 
     const handleTypeChange = (selectedType) => {
-        setSelectedType(selectedType);
+        setCurrentType(selectedType);
     };
 
     const handleDistrictChange = (selectedDistrict) => {
@@ -129,7 +130,7 @@ export const EditMeetingForm = () => {
             city: currentMeeting.city,
             zip: currentMeeting.zip,
             location_details: currentMeeting.location_details,
-            type: selectedType,
+            type: currentType,
             zoom_login: currentMeeting.zoom_login,
             zoom_pass: currentMeeting.zoom_pass,
             email: currentMeeting.email,
@@ -146,14 +147,14 @@ export const EditMeetingForm = () => {
     }
 
     return (
+        <div>
         <form className="form-container">
             <h2 className="form-title">Edit Meeting</h2>
 
             {currentMeeting !== null ? (
                 <div>
                     <div className="form-input">
-                        Days:
-                        {days.map((day) => (
+                        Meeting Days: {days.map((day) => (
                             <div key={day.id}>
                                 <input
                                     type="checkbox"
@@ -167,8 +168,7 @@ export const EditMeetingForm = () => {
                     </div>
 
                     <div className="form-input">
-                        Start Time:
-                        <input
+                        Start Time: <input
                             type="time"
                             id="start_time"
                             required
@@ -179,8 +179,7 @@ export const EditMeetingForm = () => {
                     </div>
 
                     <div className="form-input">
-                        Meeting Name:
-                        <input
+                        Meeting Name: <input
                             type="text"
                             id="meeting_name"
                             required
@@ -191,15 +190,14 @@ export const EditMeetingForm = () => {
                     </div>
 
                     <div className="form-input">
-                        Type:
-                        <div>
+                        Meeting Type: <div>
                             {types.map((type) => (
                                 <div key={type.id}>
                                     <input
                                         type="radio"
                                         name="type"
                                         value={type.id}
-                                        checked={selectedType === type.id}
+                                        checked={currentType === type.id}
                                         onChange={() => handleTypeChange(type.id)}
                                     />
                                     {type.type_name}
@@ -210,8 +208,7 @@ export const EditMeetingForm = () => {
 
                     <div>
                         <div className="form-input">
-                            District:
-                            {districts.map((district) => (
+                            District: {districts.map((district) => (
                                 <div key={district.id}>
                                     <input
                                         type="radio"
@@ -227,8 +224,7 @@ export const EditMeetingForm = () => {
 
                         <div>
                             <div className="form-input">
-                                WSO ID:
-                                <input
+                                WSO ID: <input
                                     type="number"
                                     id="wso_id"
                                     required
@@ -241,8 +237,7 @@ export const EditMeetingForm = () => {
 
                         <div>
                             <div className="form-input">
-                                Street Address (if applicable):
-                                <input
+                                Street Address (if applicable): <input
                                     type="text"
                                     id="street_address"
                                     autoFocus
@@ -254,8 +249,7 @@ export const EditMeetingForm = () => {
 
                         <div>
                             <div className="form-input">
-                                City:
-                                <input
+                                City: <input
                                     type="text"
                                     id="city"
                                     required
@@ -268,8 +262,7 @@ export const EditMeetingForm = () => {
 
                         <div>
                             <div className="form-input">
-                                Zipcode:
-                                <input
+                                Zipcode: <input
                                     type="number"
                                     id="zip"
                                     required
@@ -282,8 +275,7 @@ export const EditMeetingForm = () => {
 
                         <div>
                             <div className="form-input">
-                                Location Details (if applicable):
-                                <input
+                                Location Details (if applicable): <input
                                     type="text"
                                     id="location_details"
                                     autoFocus
@@ -295,8 +287,7 @@ export const EditMeetingForm = () => {
 
                         <div>
                             <div className="form-input">
-                                Zoom Login ID (if applicable):
-                                <input
+                                Zoom Login ID (if applicable): <input
                                     type="number"
                                     id="zoom_login"
                                     autoFocus
@@ -308,8 +299,7 @@ export const EditMeetingForm = () => {
 
                         <div>
                             <div className="form-input">
-                                Zoom Password (if applicable):
-                                <input
+                                Zoom Password (if applicable): <input
                                     type="number"
                                     id="zoom_pass"
                                     autoFocus
@@ -321,8 +311,7 @@ export const EditMeetingForm = () => {
 
                         <div>
                             <div className="form-input">
-                                Meeting Email:
-                                <input
+                                Meeting Email: <input
                                     type="text"
                                     id="email"
                                     autoFocus
@@ -334,8 +323,7 @@ export const EditMeetingForm = () => {
 
                         <div>
                             <div className="form-input">
-                                Meeting Phone Number:
-                                <input
+                                Meeting Phone Number: <input
                                     type="text"
                                     id="phone"
                                     autoFocus
@@ -346,7 +334,7 @@ export const EditMeetingForm = () => {
                         </div>
 
                         <button type="submit" onClick={handleSave} className="form-button">
-                            Save
+                            Save Meeting
                         </button>
                     </div>
                 </div>
@@ -355,5 +343,11 @@ export const EditMeetingForm = () => {
                 <p>Loading...</p>
             )}
         </form>
+        <section className="form-link-container">
+                    <Link to="/" className="form-link">
+                        Back to Meetings
+                    </Link>
+                </section>
+    </div>
     );
 };

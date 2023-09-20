@@ -1,28 +1,22 @@
-// This function fetches a list of meetings from the server.
 export const getMeetings = () => {
-    // Check if there is a token in local storage.
+
     const token = localStorage.getItem("lu_token");
 
-    // Define headers with a default value (no Authorization header).
     const headers = {};
 
-    // If there is a token in local storage, add an Authorization header with the token value.
-    // This header is used for authentication.
     if (token) {
         headers["Authorization"] = `Token ${token}`;
     }
 
-    // Send a GET request to the server's endpoint for meetings.
     return fetch("http://localhost:8000/meetings", {
         headers: headers
     })
-    // Parse the response as JSON and return it.
+
     .then(response => response.json());
 
     // If there is no token in local storage, the user is not logged in,
     // so we don't add the Authorization header to the request.
 }
-
 
 export const createMeeting = (meeting) => {
     return fetch("http://localhost:8000/meetings", {
@@ -81,31 +75,37 @@ export const deleteMeeting = (meetingId) => {
 }
 
 export const getDays = () => {
+    const token = localStorage.getItem("lu_token");
+
+    const headers = {};
+
+    if (token) {
+        headers["Authorization"] = `Token ${token}`;
+    }
+
     return fetch("http://localhost:8000/days", {
-        headers: {
-            "Authorization": `Token ${localStorage.getItem("lu_token")}`
-        }
+        headers: headers
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Failed to fetch days");
-        }
-        return response.json();
-    });
+
+    .then(response => response.json());
 }
 
 export const getTypes = () => {
+    const token = localStorage.getItem("lu_token");
+
+    const headers = {};
+    if (token) {
+        headers["Authorization"] = `Token ${token}`;
+    }
+
     return fetch("http://localhost:8000/types", {
-        headers: {
-            "Authorization": `Token ${localStorage.getItem("lu_token")}`
-        }
+        headers: headers
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Failed to fetch types");
-        }
-        return response.json();
-    });
+
+    .then(response => response.json());
+
+    // If there is no token in local storage, the user is not logged in,
+    // so we don't add the Authorization header to the request.
 }
 
 export const getGroupReps = () => {
@@ -137,31 +137,39 @@ export const getGroupRepById = (groupRepId) => {
 }
 
 export const getDistricts = () => {
-    return fetch("http://localhost:8000/districts", {
-        headers: {
-            "Authorization": `Token ${localStorage.getItem("lu_token")}`
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Failed to fetch districts");
-        }
-        return response.json();
+    const token = localStorage.getItem("lu_token");
+
+    const headers = {};
+
+    if (token) {
+        headers["Authorization"] = `Token ${token}`;
     }
-    );
+
+    return fetch("http://localhost:8000/districts", {
+        headers: headers
+    })
+
+    .then(response => response.json());
+
+    // If there is no token in local storage, the user is not logged in,
+    // so we don't add the Authorization header to the request.
 }
 
 export const getAreas = () => {
-    return fetch("http://localhost:8000/areas", {
-        headers: {
-            "Authorization": `Token ${localStorage.getItem("lu_token")}`
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Failed to fetch areas");
-        }
-        return response.json();
+    const token = localStorage.getItem("lu_token");
+
+    const headers = {};
+
+    if (token) {
+        headers["Authorization"] = `Token ${token}`;
     }
-    );
+
+    return fetch("http://localhost:8000/areas", {
+        headers: headers
+    })
+
+    .then(response => response.json());
+
+    // If there is no token in local storage, the user is not logged in,
+    // so we don't add the Authorization header to the request.
 }
