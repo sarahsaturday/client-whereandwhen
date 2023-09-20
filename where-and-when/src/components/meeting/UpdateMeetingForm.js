@@ -184,7 +184,7 @@ export const EditMeetingForm = () => {
                             id="meeting_name"
                             required
                             autoFocus
-                            value={currentMeeting.meeting_name}
+                            value={currentMeeting.meeting_name || ''}
                             onChange={changeMeetingState}
                         />
                     </div>
@@ -229,7 +229,7 @@ export const EditMeetingForm = () => {
                                     id="wso_id"
                                     required
                                     autoFocus
-                                    value={currentMeeting.wso_id}
+                                    value={currentMeeting.wso_id || ''}
                                     onChange={changeMeetingState}
                                 />
                             </div>
@@ -241,7 +241,7 @@ export const EditMeetingForm = () => {
                                     type="text"
                                     id="street_address"
                                     autoFocus
-                                    value={currentMeeting.street_address}
+                                    value={currentMeeting.street_address || ''}
                                     onChange={changeMeetingState}
                                 />
                             </div>
@@ -254,7 +254,7 @@ export const EditMeetingForm = () => {
                                     id="city"
                                     required
                                     autoFocus
-                                    value={currentMeeting.city}
+                                    value={currentMeeting.city || ''}
                                     onChange={changeMeetingState}
                                 />
                             </div>
@@ -267,7 +267,7 @@ export const EditMeetingForm = () => {
                                     id="zip"
                                     required
                                     autoFocus
-                                    value={currentMeeting.zip}
+                                    value={currentMeeting.zip || ''}
                                     onChange={changeMeetingState}
                                 />
                             </div>
@@ -279,7 +279,7 @@ export const EditMeetingForm = () => {
                                     type="text"
                                     id="location_details"
                                     autoFocus
-                                    value={currentMeeting.location_details}
+                                    value={currentMeeting.location_details || ''}
                                     onChange={changeMeetingState}
                                 />
                             </div>
@@ -291,7 +291,7 @@ export const EditMeetingForm = () => {
                                     type="number"
                                     id="zoom_login"
                                     autoFocus
-                                    value={currentMeeting.zoom_login}
+                                    value={currentMeeting.zoom_login || ''}
                                     onChange={changeMeetingState}
                                 />
                             </div>
@@ -303,7 +303,7 @@ export const EditMeetingForm = () => {
                                     type="number"
                                     id="zoom_pass"
                                     autoFocus
-                                    value={currentMeeting.zoom_pass}
+                                    value={currentMeeting.zoom_pass || ''}
                                     onChange={changeMeetingState}
                                 />
                             </div>
@@ -315,7 +315,7 @@ export const EditMeetingForm = () => {
                                     type="text"
                                     id="email"
                                     autoFocus
-                                    value={currentMeeting.email}
+                                    value={currentMeeting.email || ''}
                                     onChange={changeMeetingState}
                                 />
                             </div>
@@ -327,7 +327,7 @@ export const EditMeetingForm = () => {
                                     type="text"
                                     id="phone"
                                     autoFocus
-                                    value={currentMeeting.phone}
+                                    value={currentMeeting.phone || ''}
                                     onChange={changeMeetingState}
                                 />
                             </div>
