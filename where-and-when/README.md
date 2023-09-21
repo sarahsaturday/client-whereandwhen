@@ -24,6 +24,7 @@ Clone this repository to your local machine and install the necessary dependenci
 git clone <repository-url>
 cd <repository-folder>
 npm install
+```
 
 ## Usage
 
